@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by pj on 2016/4/8.
  */
-public class MsgDetailModel {
+public class MsgDetailModel extends BaseModel {
     private String body;
     private String image_source;
     private String title;

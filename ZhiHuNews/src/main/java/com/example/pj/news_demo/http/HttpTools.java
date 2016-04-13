@@ -22,7 +22,6 @@ public class HttpTools {
     public static String fetchData(String url, Map<String, String> params) throws IOException {
         OkHttpClient client = new OkHttpClient();
         Request.Builder request_builder = new Request.Builder();
-
         Request request = request_builder.url(url)
                 .build();
         try {

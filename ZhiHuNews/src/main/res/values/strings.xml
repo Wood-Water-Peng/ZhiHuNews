@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">news_demo</string>
     <string name="action_settings">Settings</string>
+    <string name="refreshview_header_hint_normal">下拉刷新</string>
+    <string name="refreshview_never_refresh">从未刷新</string>
+    <string name="refreshview_refresh_justnow">刚刚刷新</string>
+    <string name="refreshview_refresh_minuites_ago">%1s分钟前刷新</string>
+    <string name="refreshview_refresh_hours_ago">%1s小时前刷新</string>
+    <string name="refreshview_refresh_days_ago">%1s天前刷新</string>
+    <string name="refreshview_header_hint_ready">释放刷新数据</string>
+    <string name="refreshview_header_hint_loading">正在加载</string>
+    <string name="refreshview_header_hint_loaded">加载完成</string>
 </resources>

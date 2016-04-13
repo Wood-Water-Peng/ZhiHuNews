@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
  * Created by pj on 2016/4/7.
  */
 public class MessageDetailActivity extends BaseActivity {
+    private static final String TAG = "MessageDetailActivity";
     private TextView mTvBody;
     private String mMsg_id;
     private MsgDetailModel mMsgDetailModel;
@@ -38,8 +40,21 @@ public class MessageDetailActivity extends BaseActivity {
     }
 
     private void fetchData() {
-        mFetchMsgDetailTask = new FetchMsgDetailTask();
-        mFetchMsgDetailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (mMsgDetailModel == null) {
+            Log.i(TAG, "we do not have local data!");
+            mFetchMsgDetailTask = new FetchMsgDetailTask();
+            mFetchMsgDetailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            setData();
+        }
+    }
+
+    private void setData() {
+        mTvBody.setMovementMethod(LinkMovementMethod.getInstance());
+        mTvBody.setText(Html.fromHtml(mMsgDetailModel.getBody()));
+        mCollapsingToolbarLayout.setTitle(mMsgDetailModel.getTitle());
+        mSimpleDraweeView.setImageURI(Uri.parse(mMsgDetailModel.getImage()));
+        mTvImgSource.setText(mMsgDetailModel.getImage_source());
     }
 
     private void initData() {
@@ -57,7 +72,12 @@ public class MessageDetailActivity extends BaseActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mMsgDetailModel = HttpResultParser.getMsgDetail(mMsg_id);
+            /**
+             * 思路:
+             * 该方法只想得到一个对象，至于这个对象是怎么解析出来的，是来自网络的数据还是来自本地
+             * 他统统不care
+             */
+            mMsgDetailModel = HttpResultParser.getInstance().getMsgDetail(mMsg_id);
             if (mMsgDetailModel == null) {
                 return false;
             } else {
@@ -69,11 +89,7 @@ public class MessageDetailActivity extends BaseActivity {
         protected void onPostExecute(Boolean flag) {
             super.onPostExecute(flag);
             if (flag) {
-                mTvBody.setMovementMethod(LinkMovementMethod.getInstance());
-                mTvBody.setText(Html.fromHtml(mMsgDetailModel.getBody()));
-                mCollapsingToolbarLayout.setTitle(mMsgDetailModel.getTitle());
-                mSimpleDraweeView.setImageURI(Uri.parse(mMsgDetailModel.getImage()));
-                mTvImgSource.setText(mMsgDetailModel.getImage_source());
+                setData();
             } else {
                 Snackbar.make(mCollapsingToolbarLayout, "Please check you network", Snackbar.LENGTH_LONG)
                         .setAction("Get it", new View.OnClickListener() {
