@@ -25,10 +25,10 @@ import com.example.pj.news_demo.utils.WrapperViewState;
  */
 public class WrapperView extends LinearLayout {
     private static final String TAG = "WrapperView";
-    private View mContentView;
     private WrapperViewState mWrapperViewState;
     private Scroller mScroller;
     private static final float OFFSET_RADIO = 1.8f;
+    private RefreshContentView mContentView;
     /**
      * 把握处理回调的几个点，如刷新开始，刷新结束
      */
@@ -44,6 +44,7 @@ public class WrapperView extends LinearLayout {
         super(context, attrs);
         mWrapperViewState = new WrapperViewState();
         mCurState = mWrapperViewState.STATE_NORMAL;
+        mContentView = new RefreshContentView();
         mScroller = new Scroller(getContext(), new LinearInterpolator());
         initView();
         setOrientation(VERTICAL);
@@ -69,7 +70,7 @@ public class WrapperView extends LinearLayout {
         addView(mHeaderView, 0);
         mHeaderView.measure(0, 0);
         mHeaderHeight = mHeaderView.getMeasuredHeight();
-        mContentView = getChildAt(1);
+        mContentView.setContentView(getChildAt(1));
         Log.i(TAG, "head:" + getChildAt(0).getClass().getCanonicalName() + "content:" + getChildAt(1).getClass().getCanonicalName());
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             getViewTreeObserver().removeGlobalOnLayoutListener(listener);
@@ -81,6 +82,12 @@ public class WrapperView extends LinearLayout {
         } else {
             throw new IllegalStateException("HeadView must implement IHeaderCallback interface");
         }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "WrapperView---getTop:" + getTop());
+            }
+        }, 1000);
     }
 
     /**
@@ -153,7 +160,6 @@ public class WrapperView extends LinearLayout {
                 if (mCurState == mWrapperViewState.STATE_REFRESHING) {   //如果头部处于刷新状态,则直接消费掉事件
                     return true;
                 }
-                int curX = (int) ev.getRawX();
                 int curY = (int) ev.getRawY();
                 int disY = curY - mLastY;
                 mLastY = curY;
@@ -170,12 +176,30 @@ public class WrapperView extends LinearLayout {
                 /**
                  * 如果仅仅是考虑大于0的情况，那么就无法实现回退
                  * 当用户向上滑动的时候,滑动事件会交给子孩子，即RecycleView
+                 * 1.如果在初始情况下，即头部完全隐藏的情况下，用户上滑
+                 *       那么该事件应该交给RecycleView
+                 * 2.当我们不是在顶部向上滑时，应该讲滑动事件交给RecycleView
+                 *
                  */
-                if (disY > 0 || mWrapperViewState.isHasMovedDownVertically()) {
+                Log.i(TAG, "offSet:" + mWrapperViewState.getOffsetY());
+                if (disY < 0 && !mWrapperViewState.isHeadVisible()) {  //上滑,头部完全隐藏状态，事件交给子孩子
+                    Log.i(TAG, "使用默认的方式分发事件");
+                    return super.dispatchTouchEvent(ev);
+                } else if (disY < 0 && mWrapperViewState.isHeadVisible()) {  //头被拉出来了,上滑
+                    updateHeaderHeight(disY);
+                    return true;
+                } else if (mContentView.isAtTop() && (disY > 0 || mWrapperViewState.isHasMovedDownVertically())) {
+                    //下滑,如果不是想把下拉头拉出来,那么事件应该交给WrapperView处理
+                    updateHeaderHeight(disY);
+                    return true;
+                } else if (disY > 0 || mWrapperViewState.isHasMovedDownVertically()) {
+                    return super.dispatchTouchEvent(ev);
+                } else {
                     updateHeaderHeight(disY);
                     return true;
                 }
-                break;
+
+            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: //当我放手之后,如果有必要的话，做一个回滚动画、
                 /**
                  * 1.下拉高度不够
@@ -190,6 +214,11 @@ public class WrapperView extends LinearLayout {
 
                     }
                     resetHeaderHeight();
+                    /**
+                     * 如果不消费掉该事件
+                     * 那么该事件会被分发给RecycleView，然后被当成一个点击事件处理
+                     */
+                    return true;
                 }
                 break;
         }
@@ -206,6 +235,7 @@ public class WrapperView extends LinearLayout {
      */
     private void resetHeaderHeight() {
         if (mWrapperViewState.getOffsetY() == 0) { //头部已经完全隐藏
+            mCurState = mWrapperViewState.STATE_NORMAL;
             return;
         }
 
@@ -236,6 +266,12 @@ public class WrapperView extends LinearLayout {
     private void updateHeaderHeight(int disY) {
         moveView(disY);
 //        Log.i(TAG, "移动的距离:" + mWrapperViewState.getOffsetY() + "------头部高度:" + mHeaderHeight);
+        if (mWrapperViewState.getOffsetY() >= 0) {
+            mWrapperViewState.setIsHeadVisible(true);
+        } else {
+            mWrapperViewState.setIsHeadVisible(false);
+        }
+
         if (mWrapperViewState.getOffsetY() > mHeaderHeight) {
             mHeaderCallback.onRefreshReady();
             mCurState = mWrapperViewState.STATE_REFRESH_READY;
@@ -243,6 +279,7 @@ public class WrapperView extends LinearLayout {
             mHeaderCallback.onStateNormal();
             mCurState = mWrapperViewState.STATE_NORMAL;
         }
+
     }
 
     @Override
@@ -251,6 +288,8 @@ public class WrapperView extends LinearLayout {
         if (mScroller.computeScrollOffset()) {
             /**
              * 真正的移动操作是在这个方法中完成的，自己完成
+             * 存在的问题:
+             *  1.在向上做动画的时候，底部总是会少一块
              */
             int currY = mScroller.getCurrY();
             int offsetY = currY - mWrapperViewState.getOffsetY();
@@ -258,7 +297,6 @@ public class WrapperView extends LinearLayout {
 //            Log.i(TAG, "offsetY:" + offsetY);
         } else {
             //处理滚动完成之后的状态
-
         }
 
 
@@ -266,8 +304,10 @@ public class WrapperView extends LinearLayout {
 
     private void moveView(int offsetY) {
         mWrapperViewState.setOffsetY(offsetY);//改变WrapperView状态
-        mHeaderView.offsetTopAndBottom(offsetY); //头部便宜
-        mContentView.offsetTopAndBottom(offsetY); //中间内容偏移
+//        mHeaderView.offsetTopAndBottom(offsetY); //头部便宜
+//        mContentView.offsetTopAndBottom(offsetY); //中间内容偏移
+        offsetTopAndBottom(offsetY);
+        Log.i(TAG, "WrapperView---getTop:" + getTop());
         /**
          * 当我移动的时候，需要更新状态，处理回调接口
          */
@@ -276,7 +316,7 @@ public class WrapperView extends LinearLayout {
     }
 
     private static Handler mHandler = new Handler();
-    private int mPinnedTime;//刷新我完成之后头部停留的时间
+    private int mPinnedTime;//刷新完成之后头部停留的时间
 
     /**
      * 回调接口，暴露给外部控制类刷新完成之后进行回调

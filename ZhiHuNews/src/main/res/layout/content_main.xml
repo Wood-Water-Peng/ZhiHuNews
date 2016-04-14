@@ -12,6 +12,6 @@
         android:id="@+id/vp_message_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffff"
+        android:background="#ffff34"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </RelativeLayout>
