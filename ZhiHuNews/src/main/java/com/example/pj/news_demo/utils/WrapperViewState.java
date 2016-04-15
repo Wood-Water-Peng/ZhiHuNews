@@ -20,11 +20,11 @@ public class WrapperViewState {
     }
 
     public boolean isHasMovedDownVertically() {
-        return offsetY >0;
+        return offsetY > 0;
     }
 
     public boolean isHasMovedUpVertically() {
-        return offsetY <0;
+        return offsetY < 0;
     }
 
     public boolean isHasOffsetYBeyondHeader() {
@@ -35,5 +35,23 @@ public class WrapperViewState {
     public static final int STATE_REFRESHING = 101;//头部正在状态
     public static final int STATE_REFRESH_COMPLETED = 102;//头部刷新完成状态
     public static final int STATE_REFRESH_READY = 103;//头部准备刷新状态
+    private boolean isHeadVisible = false;  //头部是否可见
 
+    public boolean isHeadVisible() {
+        return isHeadVisible;
+    }
+
+    public void setIsHeadVisible(boolean isHeadVisible) {
+        this.isHeadVisible = isHeadVisible;
+    }
+
+    private boolean isFooterTotallyVisible;
+
+    public boolean isFooterTotallyVisible() {
+        return isFooterTotallyVisible;
+    }
+
+    public void setIsFooterTotallyVisible(boolean isFooterTotallyVisible) {
+        this.isFooterTotallyVisible = isFooterTotallyVisible;
+    }
 }

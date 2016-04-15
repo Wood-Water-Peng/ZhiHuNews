@@ -16,6 +16,7 @@ import com.example.pj.news_demo.adapter.DividerLine;
 import com.example.pj.news_demo.adapter.MessageAdapter;
 import com.example.pj.news_demo.domain.StoryModel;
 import com.example.pj.news_demo.http.HttpResultParser;
+import com.example.pj.news_demo.utils.DeviceUtil;
 import com.example.pj.news_demo.widget.WrapperView;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class MessageFragment extends BaseFragment {
         mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_message, null);
         initView();
         initData();
+        Log.i(TAG, "屏幕Width:" + DeviceUtil.getDevicePixs()[0] + "---屏幕Height:" + DeviceUtil.getDevicePixs()[1]);
         return mRootView;
     }
 
@@ -93,6 +95,9 @@ public class MessageFragment extends BaseFragment {
             public void onGlobalLayout() {
                 Log.i(TAG, "子孩子数:" + mWrapperView.getChildCount());
                 mWrapperView.addHeaderView(this);
+                //拿到WrapperView的宽高
+                Log.i(TAG, "WrapperViewWidth:" + mWrapperView.getMeasuredWidth() + "---WrapperViewWidth:" + mWrapperView.getMeasuredHeight());
+
             }
         });
         mWrapperView.setRefreshStateListener(new WrapperView.OnWrapperViewStateListener() {
