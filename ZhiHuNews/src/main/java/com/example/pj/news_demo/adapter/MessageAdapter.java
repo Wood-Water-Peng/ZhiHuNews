@@ -43,9 +43,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        if (position == mStoryModels.size()) {
-            return FOOTER_VIEW;
-        }
+//        if (position == mStoryModels.size()) {
+//            return FOOTER_VIEW;
+//        }
         return super.getItemViewType(position);
     }
 
@@ -75,7 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mStoryModels.size() + 1;
+        return mStoryModels.size();
     }
 
     //更新视图状态

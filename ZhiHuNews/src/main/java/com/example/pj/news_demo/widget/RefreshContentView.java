@@ -69,4 +69,7 @@ public class RefreshContentView {
         return false;
     }
 
+    public boolean canScrollDown() {
+        return ViewCompat.canScrollVertically(mContentView, -1);
+    }
 }

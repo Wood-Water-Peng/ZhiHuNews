@@ -35,14 +35,9 @@ public class WrapperViewState {
     public static final int STATE_REFRESHING = 101;//头部正在状态
     public static final int STATE_REFRESH_COMPLETED = 102;//头部刷新完成状态
     public static final int STATE_REFRESH_READY = 103;//头部准备刷新状态
-    private boolean isHeadVisible = false;  //头部是否可见
 
     public boolean isHeadVisible() {
-        return isHeadVisible;
-    }
-
-    public void setIsHeadVisible(boolean isHeadVisible) {
-        this.isHeadVisible = isHeadVisible;
+        return offsetY > 0 ? true : false;
     }
 
     private boolean isFooterTotallyVisible;
@@ -53,5 +48,9 @@ public class WrapperViewState {
 
     public void setIsFooterTotallyVisible(boolean isFooterTotallyVisible) {
         this.isFooterTotallyVisible = isFooterTotallyVisible;
+    }
+
+    public boolean isFootVisible() {
+        return offsetY < 0 ? true : false;
     }
 }

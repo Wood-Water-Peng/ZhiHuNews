@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.example.pj.news_demo.R;
 import com.example.pj.news_demo.adapter.DividerLine;
@@ -17,6 +16,8 @@ import com.example.pj.news_demo.adapter.MessageAdapter;
 import com.example.pj.news_demo.domain.StoryModel;
 import com.example.pj.news_demo.http.HttpResultParser;
 import com.example.pj.news_demo.utils.DeviceUtil;
+import com.example.pj.news_demo.widget.RefreshFooter;
+import com.example.pj.news_demo.widget.RefreshHeader;
 import com.example.pj.news_demo.widget.WrapperView;
 
 import java.util.ArrayList;
@@ -90,16 +91,9 @@ public class MessageFragment extends BaseFragment {
     private void initView() {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.msg_list);
         mWrapperView = (WrapperView) mRootView.findViewById(R.id.fragment_msg_wrapper_view);
-        mWrapperView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Log.i(TAG, "子孩子数:" + mWrapperView.getChildCount());
-                mWrapperView.addHeaderView(this);
-                //拿到WrapperView的宽高
-                Log.i(TAG, "WrapperViewWidth:" + mWrapperView.getMeasuredWidth() + "---WrapperViewWidth:" + mWrapperView.getMeasuredHeight());
-
-            }
-        });
+//        Log.i(TAG, "child:" + mWrapperView.getChildAt(0).getClass().getCanonicalName() + "------height:" + mWrapperView.getChildAt(0).getMeasuredHeight());
+        mWrapperView.addHeaderView(new RefreshHeader(getContext()));
+        mWrapperView.addFooterView(new RefreshFooter(getContext()));
         mWrapperView.setRefreshStateListener(new WrapperView.OnWrapperViewStateListener() {
             @Override
             public void onRefreshing() {
@@ -108,9 +102,11 @@ public class MessageFragment extends BaseFragment {
                     public void run() {
                         mWrapperView.stopRefresh();
                     }
-                }, 2000);
+                }, 1000);
             }
         });
+
+
     }
 
     private class FetchMsgWithDataTask extends AsyncTask<Void, Void, Void> {
