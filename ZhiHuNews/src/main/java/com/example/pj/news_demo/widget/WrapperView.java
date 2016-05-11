@@ -366,6 +366,7 @@ public class WrapperView extends LinearLayout {
 
     /**
      * 在该方法中需要回调头部状态的回调接口
+     *
      */
     private void updateHeaderHeight(int disY) {
         moveView(disY);
