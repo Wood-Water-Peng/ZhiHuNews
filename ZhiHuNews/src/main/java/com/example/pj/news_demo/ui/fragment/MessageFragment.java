@@ -56,33 +56,6 @@ public class MessageFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.addItemDecoration(new DividerLine(mContext, DividerLine.VERTICAL_LIST));
         mRecyclerView.setAdapter(mMessageAdapter);
-//        mRecyclerView.addOnScrollListener(new OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    int lastVisibleItemPosition = mLinearLayoutManager.findLastVisibleItemPosition();
-//                    Log.i(TAG, "lastVisibleItemPosition:" + lastVisibleItemPosition);
-//                    Log.i(TAG, "ItemCount():" + recyclerView.getAdapter().getItemCount());
-//                    if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-//                        /**
-//                         *  1.更改视图的显示状态为加载状态
-//                         */
-//                        mMessageAdapter.updateState(MessageAdapter.STATE_LOADING);
-//                        /**
-//                         *  2.开启子线程在后台加载数据
-//                         */
-//                        LoadMoreTask loadMore = new LoadMoreTask();
-//                        loadMore.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-////                super.onScrolled(recyclerView, dx, dy);
-//            }
-//        });
         //开启一个异步加载任务
         mFetchTask = new FetchMsgWithDataTask();
         mFetchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -101,6 +74,16 @@ public class MessageFragment extends BaseFragment {
                     @Override
                     public void run() {
                         mWrapperView.stopRefresh();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onLoadingMore() {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWrapperView.stopLoading();
                     }
                 }, 1000);
             }

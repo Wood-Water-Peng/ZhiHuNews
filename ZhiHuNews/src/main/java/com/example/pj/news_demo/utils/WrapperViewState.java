@@ -36,6 +36,11 @@ public class WrapperViewState {
     public static final int STATE_REFRESH_COMPLETED = 102;//头部刷新完成状态
     public static final int STATE_REFRESH_READY = 103;//头部准备刷新状态
 
+    public static final int STATE_LOAD_READY = 104;//尾部准备加载更多状态
+    public static final int STATE_LOAD_COMPLETED = 105;//尾部加载完成状态
+    public static final int STATE_LOAD_NORMAL = 106;//尾部正常状态
+    public static final int STATE_LOADING = 107;//尾部正在加载状态
+
     public boolean isHeadVisible() {
         return offsetY > 0 ? true : false;
     }

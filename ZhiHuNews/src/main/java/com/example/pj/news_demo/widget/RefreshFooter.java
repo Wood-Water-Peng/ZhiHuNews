@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.pj.news_demo.R;
@@ -19,10 +18,8 @@ import com.example.pj.news_demo.callback.IFooterCallback;
  */
 public class RefreshFooter extends LinearLayout implements IFooterCallback {
     private static final String TAG = "RefreshFooter";
-    private View mContentView;
+    private View mLoadingView;
     private Context mContext;
-    private ProgressBar mProgressBar;
-    private TextView mHintView;
     private TextView mClickView;
     private boolean showing = false;
     private LOAD_MODE mLoadMode = LOAD_MODE.RELEASE_LOAD; //默认值
@@ -53,37 +50,33 @@ public class RefreshFooter extends LinearLayout implements IFooterCallback {
 
     private void initView() {
         LayoutInflater.from(mContext).inflate(R.layout.footer_refresh, this);
-        mProgressBar = (ProgressBar) findViewById(R.id.refreshview_footer_progressbar);
-        mHintView = (TextView) findViewById(R.id.refreshview_footer_hint_textview);
+        mLoadingView = findViewById(R.id.refreshview_footer_loading);
+        mClickView = (TextView) findViewById(R.id.refreshview_footer_click_textview);
     }
 
     @Override
     public void onLoading() {
-        mHintView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mLoadingView.setVisibility(VISIBLE);
         mClickView.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoadingCompleted() {
-        mHintView.setText(R.string.refreshview_footer_hint_normal);
-        mHintView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
-        mClickView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(GONE);
+        mClickView.setText(R.string.refreshview_footer_hint_normal);
+        mClickView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onLoadingFailed() {
-        mHintView.setText(R.string.refreshview_footer_hint_normal);
-        mHintView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
-        mClickView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(GONE);
+        mClickView.setVisibility(View.VISIBLE);
+        mClickView.setText(R.string.refreshview_footer_hint_failed);
     }
 
     @Override
     public void onLoadingReady() {
-        mHintView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
         mClickView.setVisibility(View.VISIBLE);
+        mClickView.setText(R.string.refreshview_footer_hint_ready);
     }
 }
