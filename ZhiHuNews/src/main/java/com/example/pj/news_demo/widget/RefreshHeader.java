@@ -89,11 +89,6 @@ public class RefreshHeader extends LinearLayout implements IHeaderCallback {
     }
 
     @Override
-    public void onRefreshStart() {
-
-    }
-
-    @Override
     public void onRefreshing() {
         mArrowImageView.clearAnimation();
         mArrowImageView.setVisibility(View.GONE);

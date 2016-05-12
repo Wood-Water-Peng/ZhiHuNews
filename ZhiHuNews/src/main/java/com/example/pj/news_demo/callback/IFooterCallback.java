@@ -11,4 +11,5 @@ public interface IFooterCallback {
     void onLoadingFailed();
 
     void onLoadingReady();
+    void onLoadingNormal();
 }

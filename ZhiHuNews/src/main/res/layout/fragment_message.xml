@@ -9,13 +9,11 @@
         android:id="@+id/fragment_msg_wrapper_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_blue_bright"
         >
         <android.support.v7.widget.RecyclerView
             android:id="@+id/msg_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ff34ff"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             />

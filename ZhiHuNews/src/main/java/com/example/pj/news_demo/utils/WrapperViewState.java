@@ -31,7 +31,7 @@ public class WrapperViewState {
         return hasOffsetYBeyondHeader;
     }
 
-    public static final int STATE_NORMAL = 100; //正常状态
+    public static final int STATE_REFRESH_NORMAL = 100; //正常状态
     public static final int STATE_REFRESHING = 101;//头部正在状态
     public static final int STATE_REFRESH_COMPLETED = 102;//头部刷新完成状态
     public static final int STATE_REFRESH_READY = 103;//头部准备刷新状态

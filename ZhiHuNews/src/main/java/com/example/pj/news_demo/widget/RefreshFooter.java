@@ -63,7 +63,7 @@ public class RefreshFooter extends LinearLayout implements IFooterCallback {
     @Override
     public void onLoadingCompleted() {
         mLoadingView.setVisibility(GONE);
-        mClickView.setText(R.string.refreshview_footer_hint_normal);
+        mClickView.setText(R.string.refreshview_header_hint_loaded);
         mClickView.setVisibility(View.VISIBLE);
     }
 
@@ -76,7 +76,15 @@ public class RefreshFooter extends LinearLayout implements IFooterCallback {
 
     @Override
     public void onLoadingReady() {
+        mLoadingView.setVisibility(GONE);
         mClickView.setVisibility(View.VISIBLE);
         mClickView.setText(R.string.refreshview_footer_hint_ready);
+    }
+
+    @Override
+    public void onLoadingNormal() {
+        mLoadingView.setVisibility(GONE);
+        mClickView.setVisibility(View.VISIBLE);
+        mClickView.setText(R.string.refreshview_footer_hint_normal);
     }
 }

@@ -6,8 +6,6 @@ package com.example.pj.news_demo.callback;
  * 实现该接口的类有责任更改头部的状态
  */
 public interface IHeaderCallback {
-    void onRefreshStart();  //开始刷新
-
     void onRefreshing(); //刷新中
 
     void onRefreshCompleted(); //刷新完成

@@ -9,8 +9,8 @@
     <string name="refreshview_refresh_days_ago">%1s天前刷新</string>
     <string name="refreshview_header_hint_ready">释放刷新数据</string>
     <string name="refreshview_header_hint_loading">正在加载</string>
-    <string name="refreshview_footer_hint_normal">加载完成</string>
+    <string name="refreshview_footer_hint_normal">加载更多</string>
     <string name="refreshview_footer_hint_failed">加载失败</string>
-    <string name="refreshview_footer_hint_ready">松开加载更多</string>
-    <string name="refreshview_header_hint_loaded">更新完成</string>
+    <string name="refreshview_footer_hint_ready">释放加载更多</string>
+    <string name="refreshview_header_hint_loaded">加载完成</string>
 </resources>
