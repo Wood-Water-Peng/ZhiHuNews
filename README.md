@@ -1,5 +1,9 @@
-# ZhiHuNews
-这是一个初始版本，暂时模仿Github上的一个开源项目，使用了RecycleView和CardView等一系列5.0的新特性
-后续功能:
-1.增加内存缓存和Disk缓存
-2.尝试增加更多接口,更多功能
+RecycleView with header and footer
+    参考了Github上的一个关于RecycleView的开源库，自己封装了下拉头部和尾部，增加了文件缓存功能‘
+使用
+    对于AndroidStudio，建议以module的方式导入，然后添加依赖
+    注意权限：
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+
