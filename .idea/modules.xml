@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZhiHuNews/ZhiHuNews.iml" filepath="$PROJECT_DIR$/ZhiHuNews/ZhiHuNews.iml" />
-      <module fileurl="file://$PROJECT_DIR$/news_demo.iml" filepath="$PROJECT_DIR$/news_demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/recycleView-git.iml" filepath="$PROJECT_DIR$/recycleView-git.iml" />
     </modules>
   </component>
 </project>
